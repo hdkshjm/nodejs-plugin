@@ -78,12 +78,9 @@ public class NpmPackagesBuildWrapper extends BuildWrapper {
                     Throwables.propagate(e);
                 }
 
-                // HACK: Avoids issue with invalid separators in EnvVars::override in case of different master/slave
-                
-                String overriddenPaths = NodeJSInstaller.binFolderOf(nodeJSInstallation, build.getBuiltOn())
-                        + pathSeparator
-                        + vars.get("PATH");
-                vars.override("PATH", overriddenPaths);
+                String nodeJSBin =
+                        NodeJSInstaller.binFolderOf(nodeJSInstallation, build.getBuiltOn()).getRemote();
+                vars.put("PATH+NODEJS_BIN", nodeJSBin);
 
                 return super.launch(starter.envs(Util.mapToEnv(vars)));
             }
